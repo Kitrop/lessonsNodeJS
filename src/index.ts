@@ -118,5 +118,3 @@ interface IUserPostQuery {
 app.listen(port, () => {
     console.log(`server started on port ${port}`)
 })
-
-export default app
