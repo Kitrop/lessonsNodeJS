@@ -8,14 +8,16 @@
   },
   "scripts": {
     "start": "yarn nodemon src/index.ts",
-    "build": "yarn tsc"
+    "build": "yarn tsc",
+    "vercel-build": "yarn tsc"
   },
   "engines": {
-    "node": ">=16.0.0 <17.0.0"
+    "node": ">16.2.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/node": "^20.4.1",
+    "@vercel/node": "^2.15.5",
     "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
