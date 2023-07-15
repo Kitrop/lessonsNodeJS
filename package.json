@@ -9,7 +9,7 @@
   "scripts": {
     "start": "yarn nodemon src/index.ts",
     "build": "yarn tsc",
-    "vercel-build": "yarn tsc"
+    "vercel-build": "echo hello"
   },
   "engines": {
     "node": ">16.2.0"
