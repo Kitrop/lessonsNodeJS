@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express'
-import bodyParser from "body-parser";
+import bodyParser from "body-parser"
+
 const app = express()
-const port = 3003
+const port = process.env.PORT || 3003
 
 // Парсер, устанавливает значение парсера
 // extended: false, означает то что будут приходить объекты
@@ -13,7 +14,7 @@ let users = [
     {id: 1, name: 'Evgeniy'},
     {id: 2, name: 'Dmitriy'},
     {id: 3, name: 'Oleg'},
-    {id: 4, name: 'Pavel'},
+    {id: 4, name: 'Pavel'}
 ]
 
 const HTTP_STATUSES = {
@@ -55,15 +56,19 @@ app.get('/users/:id', (req: Request, res: Response) => {
         res.sendStatus(HTTP_STATUSES.NotFound404)
         return
     }
+    if (+req.params.id < 0) {
+        res.sendStatus(HTTP_STATUSES.BadRequest400)
+        return
+    }
     res.json(findUsersById)
 })
 // Добавление пользователя
-app.post('/users', urlencodedParser,(req: Request, res: Response) => {
+app.post('/users', urlencodedParser, (req: Request, res: Response) => {
     if(!req.body.name) {
         res.sendStatus(HTTP_STATUSES.BadRequest400)
         return
     }
-    const userPostQuery:IUserPostQuery = {
+    const userPostQuery = {
         id: Math.floor(Math.random()*10000),
         name: req.body.name
     }
@@ -74,6 +79,10 @@ app.post('/users', urlencodedParser,(req: Request, res: Response) => {
 app.delete('/users/:id', (req: Request, res: Response) => {
     // Обработчик ошибки при отсутствии параметра
     if (!req.params.id) {
+        res.sendStatus(HTTP_STATUSES.BadRequest400)
+        return
+    }
+    if (+req.params.id < 0) {
         res.sendStatus(HTTP_STATUSES.BadRequest400)
         return
     }
@@ -97,24 +106,22 @@ app.put('/users/:id', urlencodedParser,(req: Request, res: Response) => {
         return
     }
     const findUsersById = users.find(c => c.id === +req.params.id)
-    console.log(findUsersById)
     if (!findUsersById) {
         res.sendStatus(HTTP_STATUSES.NotFound404)
         return
     }
 
     findUsersById.name = req.body.name
-
-    res.send(findUsersById)
+    if (users) {
+        res.json(findUsersById)
+    }
+    else {
+        res.sendStatus(404)
+    }
 })
 
 
-interface IUserPostQuery {
-    id: number
-    name: string
-}
+app.listen(port)
 
 
-app.listen(port, () => {
-    console.log(`server started on port ${port}`)
-})
+export default app;
