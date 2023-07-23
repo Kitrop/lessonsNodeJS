@@ -94,27 +94,27 @@ describe('/users', function () {
         )
     })
 
-    // Проверка ошибок на неправильное обновление данных у пользователя
-    // it('should return errors', async function(){
-    //     // Тест на то что пользователя с таким id не существует
-    //     await request(app)
-    //         .put('/users/999')
-    //         .send({name: 'test'})
-    //         .expect(404)
-    //     // Тест на пустое name
-    //     await request(app)
-    //         .put('/users/1')
-    //         .send({name: ''})
-    //         .expect(400)
-    //     // Тест на не правильный запрос
-    //     await request(app)
-    //         .put('/users')
-    //         .send({name: 'test name'})
-    //         .expect(404)
-    //     // Тест на неправильный тип данных у name
-    //     await request(app)
-    //         .put('/users/1')
-    //         .send({name: 123})
-    //         .expect(400)
-    // })
+    //Проверка ошибок на неправильное обновление данных у пользователя
+    it('should return errors', async function(){
+        // Тест на то что пользователя с таким id не существует
+        await request(app)
+            .put('/users/999')
+            .send({name: 'test'})
+            .expect(404)
+        // Тест на пустое name
+        await request(app)
+            .put('/users/1')
+            .send({name: ''})
+            .expect(400)
+        // Тест на не правильный запрос
+        await request(app)
+            .put('/users')
+            .send({name: 'test name'})
+            .expect(404)
+        // Тест на неправильный тип данных у name
+        await request(app)
+            .put('/users/1')
+            .send({name: 123})
+            .expect(400)
+    })
 })

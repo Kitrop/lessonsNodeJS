@@ -74,36 +74,33 @@ userRouter.delete('/:id', (req: Request<{ id: string }>, res: Response) => {
         res.sendStatus(HTTP_STATUSES.NotFound404);
     }
 })
-// Изменяем имя юзера с помощью PUT
-// userRouter.put('/:id', urlencodedParser, (req: Request, res: Response) => {
-//     // Если не отправлен id
-//     if (!req.params.id) {
-//         res.sendStatus(HTTP_STATUSES.BadRequest400)
-//         return
-//     }
-//     // Если не отправлен name
-//     if (!req.body.name) {
-//         res.sendStatus(HTTP_STATUSES.BadRequest400)
-//         return
-//     }
-//     if (typeof req.body.name !== "string") {
-//         res.sendStatus(HTTP_STATUSES.BadRequest400)
-//         return
-//     }
-//     // Нахождение нужного юзера по id
-//     const findUsersById = users.find(c => c.id === +req.params.id)
-//     // Если нужный пользователь не найден
-//     if (!findUsersById) {
-//         res.sendStatus(HTTP_STATUSES.NotFound404)
-//         return
-//     }
-//     // Заменяем у нужного пользователя name на name который был нам отправлен
-//     findUsersById.name = req.body.name
-//     if (users) {
-//         res.json(findUsersById)
-//     } else {
-//         res.sendStatus(HTTP_STATUSES.NotFound404)
-//     }
-// })
+// Обновление данных у пользователя
+userRouter.put('/:id', express.json(), (req: Request<{ id: string }>, res: Response) => {
+    const userId = +req.params.id;
+    if (!userId || userId < 0) {
+        res.sendStatus(HTTP_STATUSES.BadRequest400);
+        return;
+    }
+
+    // Проверяем, есть ли пользователь с указанным id
+    const userToUpdate = users.find((user) => user.id === userId);
+    if (!userToUpdate) {
+        res.sendStatus(HTTP_STATUSES.NotFound404);
+        return;
+    }
+
+    // Проверяем, есть ли новое имя пользователя в теле запроса
+    const newName = req.body.name;
+    if (!newName || typeof newName !== "string") {
+        res.sendStatus(HTTP_STATUSES.BadRequest400);
+        return;
+    }
+
+    // Обновляем имя пользователя
+    userToUpdate.name = newName;
+
+    // Возвращаем обновленного пользователя
+    res.json(userToUpdate);
+});
 
 export default userRouter;
