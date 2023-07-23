@@ -1,0 +1,6 @@
+POST localhost:3003/users
+Content-Type: application/json
+
+{
+  "name": "test name"
+}
