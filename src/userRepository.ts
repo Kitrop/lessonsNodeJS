@@ -60,10 +60,11 @@ export const usersRepository = {
         }
     },
     createUser(name: string) {
-        if (!name) {
+        if (!name || name.trim().length === 0) {
+            console.log('ERROR!!!')
             return {
-                data: {},
-                status: HTTP_STATUSES.BadRequest400
+                data: 'invalid name',
+                status: 400
             }
         }
         const userPostQuery = {
@@ -74,7 +75,7 @@ export const usersRepository = {
         users.push(userPostQuery)
         return {
             data: userPostQuery,
-            status: HTTP_STATUSES.Created201
+            status: 201
         }
     },
     deleteUser(id: string) {
@@ -95,7 +96,16 @@ export const usersRepository = {
         const userId = +id;
         if (!userId || userId < 0) {
             return {
-                data: {},
+                data: 'invalid or missing id',
+                status: HTTP_STATUSES.BadRequest400
+            }
+        }
+
+        // Проверяем, есть ли новое имя пользователя в теле запроса
+        const newName = name;
+        if (!newName || typeof newName !== "string" || newName.trim().length === 0) {
+            return {
+                data: 'invalid name',
                 status: HTTP_STATUSES.BadRequest400
             }
         }
@@ -104,19 +114,11 @@ export const usersRepository = {
         const userToUpdate = users.find((user) => user.id === userId);
         if (!userToUpdate) {
             return {
-                data: {},
+                data: 'invalid id, user not found',
                 status: HTTP_STATUSES.NotFound404
             }
         }
 
-        // Проверяем, есть ли новое имя пользователя в теле запроса
-        const newName = name;
-        if (!newName || typeof newName !== "string" || name.trim().length === 0) {
-            return {
-                data: {},
-                status: HTTP_STATUSES.BadRequest400
-            }
-        }
 
         // Обновляем имя пользователя
         userToUpdate.name = newName;
