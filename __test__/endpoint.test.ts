@@ -103,7 +103,7 @@ describe('/users', function () {
             .expect(404)
         // Тест на пустое name
         await request(app)
-            .put('/users/1')
+            .put('/users/2')
             .send({name: ''})
             .expect(400)
         // Тест на не правильный запрос
@@ -113,7 +113,7 @@ describe('/users', function () {
             .expect(404)
         // Тест на неправильный тип данных у name
         await request(app)
-            .put('/users/1')
+            .put('/users/2')
             .send({name: 123})
             .expect(400)
     })

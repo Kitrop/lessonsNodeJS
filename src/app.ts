@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import userRouter from "./routes";
+import productRouter from "./productsRoutes";
 
 
 // Express приложение
@@ -11,9 +12,10 @@ export const urlencodedParser = bodyParser.urlencoded({extended: false});
 
 
 // Middleware для обработки JSON данных.
-app.use(express.json())
+app.use(bodyParser())
 
 // Подключаем роутер для /users
 app.use('/users', userRouter);
+app.use('/products', productRouter)
 
 export default app;

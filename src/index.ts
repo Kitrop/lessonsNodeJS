@@ -1,7 +1,4 @@
 import app from "./app";
-import userRouter from "./routes";
-
-
 
 const port = process.env.PORT || 3003;
 

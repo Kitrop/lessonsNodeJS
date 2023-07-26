@@ -1,13 +1,9 @@
 
 // Импровизированная "бд"
 import {IUsers} from "./ts/types";
+import {users} from "./userRepository";
 
-export let users: IUsers[] = [
-    {id: 1, name: 'Evgeniy', cash: 1000},
-    {id: 2, name: 'Dmitriy', cash: 1000},
-    {id: 3, name: 'Oleg', cash: 1000},
-    {id: 4, name: 'Pavel', cash: 1000}
-]
+
 
 export function deleteUser(userId: number): boolean {
     const index = users.findIndex(user => user.id === userId);
