@@ -74,7 +74,7 @@ describe('/users', function () {
 
         await request(app)
             .delete('/users/-1')
-            .expect(400)
+            .expect(404)
     })
 
     // Проверка на обновление данных у пользователя
@@ -110,7 +110,7 @@ describe('/users', function () {
         await request(app)
             .put('/users')
             .send({name: 'test name'})
-            .expect(404)
+            .expect(400)
         // Тест на неправильный тип данных у name
         await request(app)
             .put('/users/2')

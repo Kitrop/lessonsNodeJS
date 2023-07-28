@@ -60,13 +60,6 @@ export const usersRepository = {
         }
     },
     createUser(name: string) {
-        if (!name || name.trim().length === 0) {
-            console.log('ERROR!!!')
-            return {
-                data: 'invalid name',
-                status: 400
-            }
-        }
         const userPostQuery = {
             id: Math.floor(Math.random() * 10000),
             name: name,
@@ -80,6 +73,12 @@ export const usersRepository = {
     },
     deleteUser(id: string) {
         const userId = +id;
+        if (userId < 0) {
+            return {
+                data: {},
+                status: HTTP_STATUSES.NotFound404
+            }
+        }
         if (deleteUser(userId)) {
             return {
                 data: {},
@@ -94,21 +93,7 @@ export const usersRepository = {
     },
     updateUser(id: string, name: string) {
         const userId = +id;
-        if (!userId || userId < 0) {
-            return {
-                data: 'invalid or missing id',
-                status: HTTP_STATUSES.BadRequest400
-            }
-        }
-
-        // Проверяем, есть ли новое имя пользователя в теле запроса
         const newName = name;
-        if (!newName || typeof newName !== "string" || newName.trim().length === 0) {
-            return {
-                data: 'invalid name',
-                status: HTTP_STATUSES.BadRequest400
-            }
-        }
 
         // Проверяем, есть ли пользователь с указанным id
         const userToUpdate = users.find((user) => user.id === userId);
@@ -118,7 +103,6 @@ export const usersRepository = {
                 status: HTTP_STATUSES.NotFound404
             }
         }
-
 
         // Обновляем имя пользователя
         userToUpdate.name = newName;
