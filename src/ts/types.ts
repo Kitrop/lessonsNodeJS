@@ -16,3 +16,12 @@ export type IGetUsers = {
     name: string
 }
 
+export interface ISchemaUser {
+    username: string
+    password: string
+    roles: string[]
+}
+
+export interface ISchemaRole {
+    value: string
+}

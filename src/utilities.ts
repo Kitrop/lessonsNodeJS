@@ -1,7 +1,7 @@
 
 // Импровизированная "бд"
 import {IUsers} from "./ts/types";
-import {users} from "./userRepository";
+import {users} from "./repositories/userRepository";
 
 
 

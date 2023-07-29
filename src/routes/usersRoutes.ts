@@ -1,6 +1,6 @@
 import express, {NextFunction, Request, Response} from "express";
 import {CreateUserModule, DeleteAndGetUserModule, GetUsersModule, IGetUsers} from "../ts/types";
-import {usersRepository} from "../userRepository";
+import {usersRepository} from "../repositories/userRepository";
 import {HTTP_STATUSES} from "../utilities";
 import {body, param, query, validationResult} from 'express-validator';
 

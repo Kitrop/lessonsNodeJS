@@ -1,5 +1,5 @@
-import {IUsers} from "./ts/types";
-import {deleteUser, HTTP_STATUSES} from "./utilities";
+import {IUsers} from "../ts/types";
+import {deleteUser, HTTP_STATUSES} from "../utilities";
 
 export let users: IUsers[] = [
     {id: 1, name: 'Evgeniy', cash: 1000},
