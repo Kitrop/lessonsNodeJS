@@ -2,15 +2,19 @@ import {User} from "../models/UserModel";
 import {HTTP_STATUSES} from "../utilities";
 
 const userDBQuery = {
-     giveUsers() {
+    // Получение пользователей
+    giveUsers() {
         return User.find();
     },
+    // Получение пользователей по имени
     giveUsersByUsername(username: RegExp) {
         return User.find({username: username})
     },
+    // Получение пользователя по айди
     giveUserById(id: string) {
         return User.findOne({_id: id});
     },
+    // Создание пользователя
     async createUser(username: string, password: string) {
         const user = new User({
             username: username,
@@ -20,11 +24,13 @@ const userDBQuery = {
         await user.save()
         return user
     },
+    // Удаление пользователя
     async deleteUser(id: string) {
         const deleteUser = await User.deleteOne({_id: id})
         return deleteUser.deletedCount
     },
-    async updateUser(id: string, username: string) {
+    // Обновление пользователя
+    async updateUser(id: string, username: string | undefined, password: string | undefined) {
         const user = await User.findOne({_id: id})
 
         // Если пользователь не найден
@@ -36,8 +42,18 @@ const userDBQuery = {
         }
 
         // Обновляем имя пользователя
-        // @ts-ignore
-        user.username = username;
+        if (username) {
+            user.username = username
+        }
+        if (password) {
+            user.password = password
+        }
+        if (!username && !password) {
+            return {
+                data: 'invalid values',
+                status: HTTP_STATUSES.BadRequest400
+            }
+        }
         user.save()
         return {
             id: user._id,

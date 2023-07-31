@@ -4,19 +4,25 @@ import {User} from "../models/UserModel";
 import userDBQuery from "../db/userDB";
 
 export const usersRepository = {
+    // Выдача пользователей
     async giveUsers(name: string | null) {
+        // Получаем пользователей
         let findUsers = await userDBQuery.giveUsers()
+        // Если есть query параметр с именем
         if (name) {
             // Создаем регулярное выражение с опцией "i" (регистро-независимый поиск)
             const searchRegex = new RegExp(name, "i")
+            // Получаем пользователей по поиску имени
             findUsers =  await userDBQuery.giveUsersByUsername(searchRegex)
         }
+        // Если пользователи не найдены
         if (!findUsers) {
             return {
                 data: {},
                 status: HTTP_STATUSES.NotFound404
             }
         }
+        // Перебираем данные не выдавая пароль и количество денег
         const findUsersData = findUsers.map(f => {
             return {
                 id: f._id,
@@ -28,11 +34,11 @@ export const usersRepository = {
             data: findUsersData
         }
     },
+    // Выдача пользователя по айди
     async giveUserById(id: string) {
-        function findId(u: any, id: string) {
-            return u.id === id
-        }
+        // Получаем пользователя передавая айди
         const findUsersById = await userDBQuery.giveUserById(id)
+        // Если пользователь не найден
         if (!findUsersById) {
             return {
                 data: 'user not found',
@@ -47,15 +53,20 @@ export const usersRepository = {
             status: HTTP_STATUSES.OK200
         }
     },
+    // Передача данных для создания пользователя
     async createUser(name: string, password: string) {
+        // Передаем имя и пароль, получаем созданного пользователя
         const user = await userDBQuery.createUser(name, password)
         return {
             data: user,
             status: 201
         }
     },
+    // Передача айди пользователя которого нужно удалить
     async deleteUser(id: string) {
+        // Передаем айди пользователя которого нужно удалить, получаем результат удаления
         const deletedCount = await userDBQuery.deleteUser(id)
+        // Если удаления не произошло, то возращаем ошибку
         if (deletedCount == 0) {
             return {
                 data: 'user not found',
@@ -69,8 +80,10 @@ export const usersRepository = {
             }
         }
     },
-    async updateUser(id: string, name: string) {
-        const user = await userDBQuery.updateUser(id, name)
+    // Передача данных для обновления пользователя
+    async updateUser(id: string, name: string | undefined, password: string | undefined) {
+        // Отправляем данные, что бы занести новые данные пользователя
+        const user = await userDBQuery.updateUser(id, name, password)
 
         // Если пользователь не найден
         if (!user) {
