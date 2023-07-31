@@ -1,33 +1,26 @@
-import {IUsers} from "../ts/types";
-import {deleteUser, HTTP_STATUSES} from "../utilities";
+import {HTTP_STATUSES} from "../utilities";
+import {User} from "../models/UserModel";
 
-export let users: IUsers[] = [
-    {id: 1, name: 'Evgeniy', cash: 1000},
-    {id: 2, name: 'Dmitriy', cash: 1000},
-    {id: 3, name: 'Oleg', cash: 1000},
-    {id: 4, name: 'Pavel', cash: 1000}
-]
+import userDBQuery from "../db/userDB";
 
 export const usersRepository = {
-    giveUsers(name: string | null) {
-        let findUsers = users
-        // если пришел query parameter, если не пришел, выдаем всех юзеров
+    async giveUsers(name: string | null) {
+        let findUsers = await userDBQuery.giveUsers()
         if (name) {
-            findUsers = users
-                // Приводим names и query param к нижнему регистру, что бы правильно осуществлять поиск.
-                // Ищем нужную нам подстроку и если ее индекс больше -1, то фильтруем и выдаем нужных пользователей
-                .filter(u => u.name.toLowerCase().indexOf(name.toLowerCase()) > -1)
+            // Создаем регулярное выражение с опцией "i" (регистро-независимый поиск)
+            const searchRegex = new RegExp(name, "i")
+            findUsers =  await userDBQuery.giveUsersByUsername(searchRegex)
         }
-        if (!findUsers.length) {
+        if (!findUsers) {
             return {
-                status: HTTP_STATUSES.NotFound404,
-                data: {}
+                data: {},
+                status: HTTP_STATUSES.NotFound404
             }
         }
         const findUsersData = findUsers.map(f => {
             return {
-                id: f.id,
-                name: f.name
+                id: f._id,
+                username: f.username
             }
         })
         return {
@@ -35,69 +28,52 @@ export const usersRepository = {
             data: findUsersData
         }
     },
-    giveUserById(id: string) {
-        // параметр лежит в req.params
-        // достаем id из url и превращаем его в числовое значение и находим его в json
-        const findUsersById = users.find(c => c.id === +id)
+    async giveUserById(id: string) {
+        function findId(u: any, id: string) {
+            return u.id === id
+        }
+        const findUsersById = await userDBQuery.giveUserById(id)
         if (!findUsersById) {
             return {
-                data: {},
+                data: 'user not found',
                 status: HTTP_STATUSES.NotFound404
-            }
-        }
-        if (+id < 0) {
-            return {
-                data: {},
-                status: HTTP_STATUSES.BadRequest400
             }
         }
         return {
             data: {
-                id: findUsersById.id,
-                name: findUsersById.name,
+                _id: findUsersById._id,
+                username: findUsersById.username,
             },
             status: HTTP_STATUSES.OK200
         }
     },
-    createUser(name: string) {
-        const userPostQuery = {
-            id: Math.floor(Math.random() * 10000),
-            name: name,
-            cash: 0
-        }
-        users.push(userPostQuery)
+    async createUser(name: string, password: string) {
+        const user = await userDBQuery.createUser(name, password)
         return {
-            data: userPostQuery,
+            data: user,
             status: 201
         }
     },
-    deleteUser(id: string) {
-        const userId = +id;
-        if (userId < 0) {
+    async deleteUser(id: string) {
+        const deletedCount = await userDBQuery.deleteUser(id)
+        if (deletedCount == 0) {
             return {
-                data: {},
+                data: 'user not found',
                 status: HTTP_STATUSES.NotFound404
             }
         }
-        if (deleteUser(userId)) {
+        else {
             return {
-                data: {},
+                data: 'user delete',
                 status: HTTP_STATUSES.NoContent204
-            }
-        } else {
-            return {
-                data: {},
-                status: HTTP_STATUSES.NotFound404
             }
         }
     },
-    updateUser(id: string, name: string) {
-        const userId = +id;
-        const newName = name;
+    async updateUser(id: string, name: string) {
+        const user = await userDBQuery.updateUser(id, name)
 
-        // Проверяем, есть ли пользователь с указанным id
-        const userToUpdate = users.find((user) => user.id === userId);
-        if (!userToUpdate) {
+        // Если пользователь не найден
+        if (!user) {
             return {
                 data: 'invalid id, user not found',
                 status: HTTP_STATUSES.NotFound404
@@ -105,11 +81,14 @@ export const usersRepository = {
         }
 
         // Обновляем имя пользователя
-        userToUpdate.name = newName;
+        user.username = name;
 
         // Возвращаем обновленного пользователя
         return {
-            data: userToUpdate,
+            data: {
+                _id: user.id,
+                username: user.username
+            },
             status: HTTP_STATUSES.OK200
         }
     }

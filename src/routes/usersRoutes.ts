@@ -1,73 +1,55 @@
-import express, {NextFunction, Request, Response} from "express";
-import {CreateUserModule, DeleteAndGetUserModule, GetUsersModule, IGetUsers} from "../ts/types";
+import express, {Request, Response} from "express";
+import {CreateUserModule, DeleteAndGetUserModule, GetUsersModule} from "../ts/types";
 import {usersRepository} from "../repositories/userRepository";
-import {HTTP_STATUSES} from "../utilities";
-import {body, param, query, validationResult} from 'express-validator';
+import {bodyNameRequired, bodyPassRequired, HTTP_STATUSES, idParamRequired, putValidation} from "../utilities";
+import {body, param, validationResult} from 'express-validator';
 
 const userRouter = express.Router();
-const idParamRequired = param('id').notEmpty().escape()
-const bodyNameRequired = body('name').matches(/^[^0-9]+$/, "g").trim().notEmpty()
 
 userRouter
-    // Получение пользователей
-    .get('/',query('name').isString, (req: GetUsersModule<{ name: string }>, res: Response<IGetUsers[]>) => {
-        const getUsers = usersRepository.giveUsers(req.query.name)
-        if (getUsers.status === 200) {
-            // @ts-ignore
-            res.json(getUsers.data)
-                .sendStatus(HTTP_STATUSES.OK200)
-        }
-        else {
-            res.sendStatus(getUsers.status)
+    .get('/', async (req: GetUsersModule<{ name: string }>, res: Response) => {
+        const getUsers = await usersRepository.giveUsers(req.query.name);
+        if (getUsers.status === HTTP_STATUSES.OK200) {
+            res.status(HTTP_STATUSES.OK200).json(getUsers.data);
+        } else {
+            res.status(getUsers.status).json(getUsers.data);
         }
     })
 
-    // Получение определенного пользователя. :param - параметр
-    .get('/:id',(req: DeleteAndGetUserModule<{ id: string }>, res: Response<IGetUsers>) => {
-        const getUserById = usersRepository.giveUserById(req.params.id)
-        if(getUserById.status === 200) {
-            // @ts-ignore
-            res.json(getUserById.data)
-                .sendStatus(HTTP_STATUSES.OK200)
-        }
-        else {
-            res.sendStatus(getUserById.status)
-        }
+    .get('/:id', idParamRequired, async (req: DeleteAndGetUserModule<{ id: string }>, res: Response) => {
+        const getUserById = await usersRepository.giveUserById(req.params.id);
+        res.status(getUserById.status).json(getUserById.data);
     })
 
-    // Добавление пользователя
-    .post('/', bodyNameRequired,(req: CreateUserModule<{ name: string }>, res: Response) => {
+    .post('/', bodyNameRequired, bodyPassRequired,async (req: CreateUserModule<{ name: string; password: string }>, res: Response) => {
         const result = validationResult(req)
         if (result.isEmpty()) {
-            const createUser = usersRepository.createUser(req.body.name)
-            res.status(createUser.status).send(createUser.data)
+            const createUser = await usersRepository.createUser(req.body.name, req.body.password);
+            res.status(createUser.status).json(createUser.data)
+        } else {
+            res.status(400).json({ errors: result.array() })
         }
-        res.status(400)
-            .send({errors: result.array()})
     })
 
-    // Удаление пользователя
-    .delete('/:id?', idParamRequired, (req, res) => {
+    .delete('/:id?', idParamRequired, async (req, res) => {
         const result = validationResult(req);
         if (result.isEmpty()) {
             // @ts-ignore
-            const deleteUser = usersRepository.deleteUser(req.params.id)
+            const deleteUser = await usersRepository.deleteUser(req.params.id)
             res.sendStatus(deleteUser.status)
+        } else {
+            res.status(400).json({ errors: result.array() });
         }
-        res.status(400)
-            .send({errors: result.array()})
     })
 
-    // Обновление данных у пользователя
-    .put('/:id?', idParamRequired, bodyNameRequired,(req: Request<{ id: string }>, res: Response) => {
+    .put('/:id?', idParamRequired, body('name').exists().notEmpty(), body('password').exists().notEmpty(), putValidation, async (req: Request<{ id: string }>, res: Response) => {
         const result = validationResult(req);
         if (result.isEmpty()) {
-            const updateUser = usersRepository.updateUser(req.params.id, req.body.name)
-            res.status(updateUser.status)
-                .send(updateUser.data)
+            const updateUser = await usersRepository.updateUser(req.params.id, req.body.name);
+            res.status(updateUser.status).json(updateUser.data);
+        } else {
+            res.status(400).json({ errors: result.array() })
         }
-        res.status(400)
-            .send({errors: result.array()});
-    })
+    });
 
 export default userRouter

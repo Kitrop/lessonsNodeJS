@@ -1,4 +1,5 @@
 import { Request } from 'express';
+import {Schema} from "mongoose";
 
 export type GetUsersModule<T> = Request<{}, {}, {}, T>
 export type UpdateUserModule<T, D> = Request<T, {}, D, {}>
