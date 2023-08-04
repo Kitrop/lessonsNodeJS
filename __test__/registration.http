@@ -1,0 +1,8 @@
+POST localhost:3003/api/registration
+Content-Type: application/json
+
+{
+  "username": "user",
+  "email": "email@gmail.com",
+  "password": "$tr0ngPa$$w0rd_"
+}

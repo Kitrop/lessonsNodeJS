@@ -1,0 +1,7 @@
+POST localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "email": "email@gmail.com",
+  "password": "$tr0ngPa$$w0rd_"
+}

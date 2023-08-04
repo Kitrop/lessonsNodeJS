@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
+</head>
+<body>
+<header class="header">
+    <span class="header_span">
+        Node.JS lessons
+    </span>
+    <a class="header_link" href="login.html">Login</a>
+    <a class="header_link" href="#">Registration</a>
+</header>
+<h1 class="h1_text" style="text-align: center;">Registration</h1>
+<div class="wrapper">
+    <div class="wrapper_cnt">
+        <form class="form" id="form" onsubmit="registration(event)">
+
+            <label for="username">Username</label>
+            <input class="input" id="username" type="text" placeholder="username">
+
+            <label for="email">Email</label>
+            <input class="input" id="email" type="email" placeholder="email">
+
+            <label for="password">Password</label>
+            <input class="input" id="password" type="password" placeholder="password">
+
+            <label for="passwordRepeat">Repeat password</label>
+            <input class="input" id="passwordRepeat" type="password" placeholder="repeat password">
+
+            <button class="btn" id="btn" type="submit">Registration</button>
+
+        </form>
+    </div>
+</div>
+</body>
+<script src="js/registration.js"></script>
+</html>

@@ -1,5 +1,5 @@
 import app from "./app";
-import {connect} from 'mongoose'
+import {connect, ConnectOptions} from 'mongoose'
 
 const port = process.env.PORT || 3003
 const uri = "mongodb+srv://veryyoshicool:9265@cluster0.ksk53e9.mongodb.net/?retryWrites=true&w=majority"
@@ -9,7 +9,9 @@ const uri = "mongodb+srv://veryyoshicool:9265@cluster0.ksk53e9.mongodb.net/?retr
 async function run() {
     console.log('!!!!')
     try {
-        await connect(uri)
+        await connect(uri, {
+            useNewUrlParser: true,
+        } as ConnectOptions)
     }
     catch (e) {
         console.log(e)

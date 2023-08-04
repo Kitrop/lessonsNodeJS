@@ -1,8 +1,0 @@
-POST localhost:3003/users
-Content-Type: application/json
-
-{
-  "name": "Mihail",
-  "password": "StrongPassword123_"
-}
-

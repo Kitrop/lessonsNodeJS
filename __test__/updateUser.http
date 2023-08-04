@@ -1,7 +1,0 @@
-PUT localhost:3003/users/64c4a7aa8d4fabdce21cdf61
-Content-Type: application/json
-
-{
-  "name": "Pavel I",
-  "password": "21B5zFqO3"
-}

@@ -1,0 +1,4 @@
+GET localhost:3003/api/me
+Content-Type: application/json
+token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY0Y2EwOTU0YjY2MTQxMjM1YzkxZDAxNyJ9LCJpYXQiOjE2OTA5NjIyNjAsImV4cCI6MTY5MDk3MjI2MH0.vnQ9CgD1kOZvDXjdqjEGhG1jJQNrNaPab3SlDYhr-I4
+

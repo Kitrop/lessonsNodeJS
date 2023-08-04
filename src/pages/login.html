@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+    <span class="header_span">
+        Node.JS lessons
+    </span>
+    <a id="login_link" class="header_link" href="#">Login</a>
+    <a id="registration_link" class="header_link" href="registration.html">Registration</a>
+</header>
+<h1 class="h1_text" style="text-align: center;">Login</h1>
+<div class="wrapper">
+    <div class="wrapper_cnt">
+        <form class="form" id="form" onsubmit="login(event)">
+            <label for="email">Email</label>
+            <input class="input" id="email" type="text" placeholder="email">
+            <label for="password">Password</label>
+            <input class="input" id="password" type="password" placeholder="password">
+            <button class="btn" id="btn" type="submit">LOGIN</button>
+            <div class="promo">Нет аккаунта? <a href="registration.html">Создай!</a></div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="js/login.js"></script>
+</html>
