@@ -26,7 +26,4 @@ export const putValidation = body().custom((value, { req }) => {
     return true;
 })
 
-
-const adas = () => {
-    body('name').exists().notEmpty(), body('password').exists().notEmpty(), putValidation
-}
+export const secretKey = "jewerly"

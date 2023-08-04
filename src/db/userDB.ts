@@ -1,5 +1,5 @@
 import {User} from "../models/UserModel";
-import {HTTP_STATUSES} from "../utilities";
+import {HTTP_STATUSES, secretKey} from "../utilities"
 import {UsersModel} from "../models/UsersModel";
 import {sign} from "jsonwebtoken";
 
@@ -95,9 +95,8 @@ export const userAuthDB = {
             }
             sign(
                 payload,
-                "jewerly", {expiresIn: 10000}, (err, token) => {
+                secretKey, {expiresIn: 10000}, (err, token) => {
                     if (err) throw err
-                    console.log(token)
                 }
             )
 

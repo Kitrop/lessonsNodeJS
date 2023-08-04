@@ -1,16 +1,17 @@
 import {Request, Response, Router} from "express";
 import {body, validationResult} from "express-validator";
 import {authRepository} from "../repositories/authRepository";
-import {authMiddleware} from "./middlewares/authMiddleware";
+import {
+    authMiddleware,
+    getValidationPassword,
+    postValidationEmail, postValidationPassword,
+    postValidationUsername
+} from "./middlewares/authMiddleware";
 import {UsersModel} from "../models/UsersModel";
 
 const authRouter = Router()
 
-const postValidationUsername = body('username').trim().notEmpty().escape()
-const postValidationPassword = body('password').isStrongPassword().notEmpty().escape()
-const postValidationEmail = body('email').isEmail().notEmpty()
-const getValidationPassword = body('password').trim().notEmpty()
-const getId = body('_id').trim().notEmpty().escape()
+
 
 authRouter
     .post('/login', postValidationEmail, getValidationPassword, async (req: Request, res: Response) => {

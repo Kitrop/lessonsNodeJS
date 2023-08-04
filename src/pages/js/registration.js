@@ -3,7 +3,6 @@ const usernameReg = document.querySelector('#username')
 const passReg = document.querySelector('#password')
 const passRepeatReg = document.querySelector('#passwordRepeat')
 const btnConfirm = document.querySelector('#btn')
-const form = document.querySelector('#form')
 
 const registration = (event) => {
     event.preventDefault()

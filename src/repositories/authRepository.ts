@@ -1,5 +1,5 @@
 import {userAuthDB} from "../db/userDB";
-import {HTTP_STATUSES} from "../utilities";
+import {HTTP_STATUSES, secretKey} from "../utilities"
 import {compare, hash} from "bcryptjs";
 import {sign} from "jsonwebtoken";
 
@@ -30,7 +30,7 @@ export const authRepository = {
 
                 // получаем токен, что бы его дальше отправить
                 const tokenUser = await new Promise<string>((resolve, reject) => {
-                    sign(payload, "jewerly", { expiresIn: 3600 }, (err, token) => {
+                    sign(payload, secretKey, { expiresIn: 3600 }, (err, token) => {
                         if (err) reject(err)
                         resolve(token || "")
                     })
